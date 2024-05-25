@@ -1,3 +1,9 @@
+# Project
+src/image_to_ascii/data
+archive.zip
+ascii_100/*
+ascii_20/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
