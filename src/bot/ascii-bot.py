@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import subprocess
 import os
+import re
 
 # NEEDS TO BE SET WITH YOUR DISCORD TOKEN
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -44,6 +45,7 @@ async def read_output(channel):
                     if not s.isspace():
                         clean.append(s)
                 res = "\n".join(clean)
+                res = re.sub('<.*>', '', res)
                 await channel.send(f'```\n{res}\n```')
             else:
                 break
@@ -59,7 +61,7 @@ async def on_message(message):
             return
 
         # CHANGE THE PATHS OF MISTRAL_7B AND LORA
-        command = "mistral-chat ./mistral_models/7B_instruct --max_tokens 4096 --temperature 1.0 --instruct --lora_path ./apples/checkpoints/checkpoint_000300/consolidated/lora.safetensors"
+        command = "mistral-chat ./mistral_models/7B_instruct --max_tokens 4096 --temperature 1.0 --instruct --lora_path ./car/checkpoints/checkpoint_000100/consolidated/lora.safetensors"
 
         process = await asyncio.create_subprocess_shell(
             command,
