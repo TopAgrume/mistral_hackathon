@@ -1,3 +1,11 @@
+# Project
+src/image_to_ascii/data
+src/image_to_ascii/ascii_100/ascii_100_FirstDataset_Cat.csv
+src/image_to_ascii/ascii_20/ascii_20_FirstDataset_Cat.csv
+archive.zip
+ascii_100/*
+ascii_20/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
