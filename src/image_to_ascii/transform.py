@@ -78,7 +78,7 @@ def main(data_path, csv_ascii_30_path, csv_asccii_60_path):
         for class_ in os.listdir(dataset_path):
             class_path = os.path.join(dataset_path, class_)
             ascii_30, ascii_60 = [], []
-            i = 0
+
             for sample in tqdm(os.listdir(class_path)):
                 sample_path = os.path.join(class_path, sample)
                 #print(f"Processing: Dataset {datasets_name}, Class {class_}, Sample {sample}")
@@ -87,26 +87,15 @@ def main(data_path, csv_ascii_30_path, csv_asccii_60_path):
                 ascii_30.append([generate_ascii_art(input_image, 25, ascii_chars), class_, sample])
                 ascii_60.append([generate_ascii_art(input_image, 40, ascii_chars), class_, sample])
 
-                if i == 5:
-                    break
-                i += 1
-            csv_save(os.path.join(csv_ascii_30_path, f"ascii_30_{datasets_name}dd_{class_}.csv"), ascii_30)
-            csv_save(os.path.join(csv_asccii_60_path, f"ascii_60_{datasets_name}dd_{class_}.csv"), ascii_60)
+            csv_save(os.path.join(csv_ascii_30_path, f"ascii_30_{datasets_name}_{class_}.csv"), ascii_30)
+            csv_save(os.path.join(csv_asccii_60_path, f"ascii_60_{datasets_name}_{class_}.csv"), ascii_60)
             return
     print('===> Done <===')
 
-# %%
-data_path = os.path.join(os.getcwd(), "src", "image_to_ascii", "data")
-data_path
-
-# %%
-ascii_30_path = os.path.join(os.getcwd(),  "src", "image_to_ascii", "ascii_30")
-ascii_30_path
-
-# %%
-ascii_60_path = os.path.join(os.getcwd(),  "src", "image_to_ascii", "ascii_60")
-ascii_60_path
 
 # %%
 if __name__ == "__main__":
+    data_path = os.path.join(os.getcwd(), "src", "image_to_ascii", "data")
+    ascii_30_path = os.path.join(os.getcwd(),  "src", "image_to_ascii", "ascii_30")
+    ascii_60_path = os.path.join(os.getcwd(),  "src", "image_to_ascii", "ascii_60")
     main(data_path, ascii_30_path, ascii_60_path)
