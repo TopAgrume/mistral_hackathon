@@ -12,10 +12,19 @@ Exemple :
 
 - Installing the Discord bot on your favorite server
 
-### Installation
+### Preprocessing
 
+Original image :  
 
-## How to start
+![Dog without preprocessing](assets/dog1.png)
+
+Segmented image :  
+
+![Dog without preprocessing](assets/dog2.png)
+
+Thresholded image :  
+
+![Dog without preprocessing](assets/dog3.png)
 
 
 ## Made with
@@ -30,7 +39,12 @@ GPU : H100
 
 ## Authors
 
-* **Prenom Nom** _alias_ [@outout14](https://github.com/blablab)
+* **Maël Reynaud** _alias_ [@DjDonPablo](https://github.com/DjDonPablo)
+* **Alexandre Devaux-Rivière** _alias_ [@TopAgrume](https://github.com/TopAgrume)
+* **Paul Duhot** _alias_ [@Pauldht](https://github.com/Pauldht)
+* **William Peoc'h** _alias_ [@williampeoch](https://github.com/williampeoch)
+
+**Made during Mistral AI hackathon Paris 2024**
 
 ## License
 
