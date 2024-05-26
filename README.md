@@ -26,6 +26,8 @@ Thresholded image :
 
 ![Dog without preprocessing](assets/dog3.png)
 
+Here is the ASCII Art of this dog in text format : [Dog ASCII Art](assets/dog.txt)
+
 
 ## Made with
 
