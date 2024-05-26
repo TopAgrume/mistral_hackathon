@@ -6,7 +6,7 @@ from PIL import Image
 from tqdm import tqdm
 import numpy as np
 from rembg import remove as remove_background
-
+from multiprocessing import Pool, cpu_count
 
 DEFAULT_ASCII_CHARS = ' .:-=+*#%@'
 
@@ -68,28 +68,46 @@ def generate_ascii_art(image, output_width, ascii_chars=DEFAULT_ASCII_CHARS):
     ascii_art = image_to_ascii(image, ascii_chars, output_width*2)
     return ascii_art
 
+
+def process_batch(args):
+    dataset_name, class_name, batch = args
+    ascii_30, ascii_60 = [], []
+
+    for sample in batch:
+        sample_path = sample['path']
+        input_image = load_image(sample_path, "no_bg" in sample_path)
+        ascii_30.append([generate_ascii_art(input_image, 25, ascii_chars), class_name, sample['name']])
+        ascii_60.append([generate_ascii_art(input_image, 40, ascii_chars), class_name, sample['name']])
+
+    return (ascii_30, ascii_60, dataset_name, class_name)
+
+def save_csvs(result, csv_ascii_30_path, csv_ascii_60_path):
+    ascii_30, ascii_60, dataset_name, class_name = result
+    csv_save(os.path.join(csv_ascii_30_path, f"ascii_30_{dataset_name}_{class_name}.csv"), ascii_30)
+    csv_save(os.path.join(csv_ascii_60_path, f"ascii_60_{dataset_name}_{class_name}.csv"), ascii_60)
+
+
 # %%
 ascii_chars = ' .:-=+*#%@'
 
-def main(data_path, csv_ascii_30_path, csv_asccii_60_path):
-    for datasets_name in os.listdir(data_path):
-        dataset_path = os.path.join(data_path, datasets_name)
+def main(data_path, csv_ascii_30_path, csv_ascii_60_path, batch_size=10, num_workers=cpu_count() // 4):
+    tasks = []
+    print(f"Process launched on {num_workers} CPU cores")
+    for dataset_name in os.listdir(data_path):
+        dataset_path = os.path.join(data_path, dataset_name)
 
-        for class_ in os.listdir(dataset_path):
-            class_path = os.path.join(dataset_path, class_)
-            ascii_30, ascii_60 = [], []
+        for class_name in os.listdir(dataset_path):
+            class_path = os.path.join(dataset_path, class_name)
+            samples = [{'name': sample, 'path': os.path.join(class_path, sample)} for sample in os.listdir(class_path)]
 
-            for sample in tqdm(os.listdir(class_path)):
-                sample_path = os.path.join(class_path, sample)
-                #print(f"Processing: Dataset {datasets_name}, Class {class_}, Sample {sample}")
-                input_image = load_image(sample_path, "no_bg" in sample_path)
+            for i in range(0, len(samples), batch_size):
+                batch = samples[i:i + batch_size]
+                tasks.append((dataset_name, class_name, batch))
 
-                ascii_30.append([generate_ascii_art(input_image, 25, ascii_chars), class_, sample])
-                ascii_60.append([generate_ascii_art(input_image, 40, ascii_chars), class_, sample])
+        with Pool(num_workers) as pool:
+            for result in tqdm(pool.imap_unordered(process_batch, tasks), total=len(tasks)):
+                save_csvs(result, csv_ascii_30_path, csv_ascii_60_path)
 
-            csv_save(os.path.join(csv_ascii_30_path, f"ascii_30_{datasets_name}_{class_}.csv"), ascii_30)
-            csv_save(os.path.join(csv_asccii_60_path, f"ascii_60_{datasets_name}_{class_}.csv"), ascii_60)
-            return
     print('===> Done <===')
 
 
